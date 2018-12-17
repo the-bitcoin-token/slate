@@ -90,7 +90,7 @@ const data = 'some string'
 const outputId = BitcoinDb.return(data)
 ````
 
-Stores a string in an op_return output of a Bitcoin transaction. The string can have up to 220 characters.
+Stores a string in an op_return output of a Bitcoin transaction. The string can have up to 110 characters.
 
 ### Type
 

@@ -19,7 +19,7 @@ const BitcoinWallet = Bitcoin.Wallet
 const randomWallet = new BitcoinWallet()
 ```
 
-To create a new `BitcoinWallet` with a random mnemonic call the constructor.
+Generates a new `BitcoinWallet` with a random mnemonic call the constructor.
 
 
 <!-- A <code>BitcoinWallet</code> object stores a <a href="https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki">BIP32</a> extended private key. This key can be used to generate a private public key pair and a Bitcoin Cash address. Users can send Bitcoin Cash to the address to fund the wallet. The wallet object can compute the balance of the address as well as send bitcoin from it.
@@ -32,7 +32,7 @@ The functions of a <code>BitcoinWallet</code> object are listed below. -->
 
 ## getRandomMnemonic
 
-> Generate a mnemonic phrase
+> Generate a mnemonic
 
 ```javascript
 const mnemonic = BitcoinWallet.getRandomMnemonic()
@@ -222,16 +222,10 @@ const derivedWallet = wallet.derive(4)
 
 A BitcoinWallet can deterministically derive <em>2<sup>32</sup></em> child wallets. To derive a child wallet call `derive` with a number <em>&le; 2<sup>32</sup></em>. The second optional parameter determines if the wallet if hardened or not. Read more about hardened wallets in <a href="https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki">BIP32</a>.
 
-> Derive wallet compatible with Yours, Bitcoin.com, or Coinbase.com
+> Derive wallet with path `m/44'/0'/0'`
 
 ````javascript
 const wallet = wallet.derive('m', false).derive(44, true).derive(0, true).derive(0, true)
-````
-
-> Derive wallet compatible with Bitpay
-
-````javascript
-const wallet = wallet.derive('m', false).derive(44, true).derive(145, true).derive(0, true)
 ````
 
 There exists a standard for how to use derivation paths to generate interoperable wallets (<a href="https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki">BIP44</a>). Two popular derivation paths are
