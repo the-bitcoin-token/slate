@@ -4,6 +4,8 @@ You need <a href="https://docs.npmjs.com/downloading-and-installing-node-js-and-
 
 ## Install
 
+Create a BitcoinToken project. If you only want to use BitcoinWallet you are done. If you want to use BitcoinDb or BitcoinToken you need to install and run a non-standard server.
+
 ### Create a BitcoinToken project
 
 > Create a BitcoinToken project
@@ -13,37 +15,38 @@ npm i -y
 npm i bitcointoken
 ````
 
-Create a project by running <code>npm i -y</code> and install BitcoinToken using <code>npm i bitcointoken</code>.
+Create a project by running <code>npm i -y</code> and install BitcoinToken using
 
-If you only want to use BitcoinWallet you are done. If you want to use BitcoinDb or BitcoinToken you need to install and run a non-standard server.
+<code>npm i bitcointoken</code>.
 
 
 ### Install and run the non-standard server
 
 > Install and run the non-standard server
 
-````terminal
+````shell
+# install
 git clone https://github.com/BitcoinDB/bitcoin-non-standard-server.git
-cd bitcoin-non-standard-server/
-docker-compose up
+# run
+cd bitcoin-non-standard-server && docker-compose up
 ````
 
-We recommend to use <a href="https://www.docker.com/">Docker</a> and <a href="https://docs.docker.com/compose/">Docker Compose</a> to build and run the server using the command on the right. If you do not use docker you can find instructions in the <a href="https://github.com/the-bitcoin-token/bitcoin-non-standard-server">Github repo</a>.
+We recommend to use <a href="https://www.docker.com/">Docker</a> and <a href="https://docs.docker.com/compose/">Docker Compose</a> to build and run the server using the commands on the right. If you do not use docker you can find instructions in the <a href="https://github.com/the-bitcoin-token/bitcoin-non-standard-server">Github repo</a>.
 
 ## Run in Node
 
 > File index.js
 
 ````javascript
-const Bitcoin = require('bitcointoken')
+const { Wallet } = require('bitcointoken')
 
-const wallet = new Bitcoin.Wallet()
+const wallet = new Wallet()
 console.log(`address: ${wallet.getAddress()}`)
 ````
 
 After installing BitcoinToken, create a file <code>index.js</code> with the content shown on the right. Run the code using
 
-`node --experimental-repl-await index.js`
+`node index.js`
 
 The output should be similar to
 
@@ -124,13 +127,13 @@ The problem is most likely that you are not running the non-standard server.
 > File generate-mnemonic.js
 
 ````javascript
-const Bitcoin = require('bitcointoken')
-console.log(Bitcoin.Wallet.getRandomMnemonic())
+const { Wallet } = require('bitcointoken')
+console.log(Wallet.getRandomMnemonic())
 ````
 
-You have to fund your wallet. First check that the same wallet is generated every time you run your code: Run your code multiple times and check if the  same address is logged every time.
+You have to fund your wallet. First check that the same wallet is generated every time you run your code: Run it multiple times and check if the  same address is logged every time.
 
 
 If so you can fund that address using a [testnet faucet](https://coinfaucet.eu/en/bch-testnet/).
 
-Otherwise you need to initialize your object from a mnemonic. To generate a mnemonic, create the file <code>generate-mnemonic.js</code> and run it using <code> node --experimental-repl-await generate-mnemonic.js</code>. Now you can generate your object using the logged mnemonic using <code>.fromMnemonic()</code> and fund it using the [testnet faucet](https://coinfaucet.eu/en/bch-testnet/)
+Otherwise you need to initialize your object from a mnemonic. To generate a mnemonic, create the file <code>generate-mnemonic.js</code> and run it using <code> node --experimental-repl-await generate-mnemonic.js</code>. Now you can generate your object using the logged mnemonic using <code>Wallet.fromMnemonic()</code> and fund it using the [testnet faucet](https://coinfaucet.eu/en/bch-testnet/)

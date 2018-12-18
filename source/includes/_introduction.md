@@ -2,16 +2,14 @@
 # Introduction
 
 ```javascript
-const Bitcoin = require('bitcointoken')
-
-// Bitcoin === { Wallet, Db, Token, Source }
+const { Token, Db, Wallet, Source } = require('bitcointoken')
 ```
 
-The BitcoinToken library consists of four classes
+The BitcoinToken library is a collection of tools that make it easy to integrate Bitcoin into web applications.
 
- * **BitcoinWallet** send, store, and receive Bitcoin Cash
- * **BitcoinDb** store data on the Bitcoin Cash blockchain
- * **BitcoinToken** issue tokens on Bitcoin Cash
- * **BitcoinSource** a JS implementation of Bitcoin Cash
+ * **BitcoinSource** a readable JS implementation of Bitcoin
+ * **BitcoinWallet** send, store, and receive Bitcoin
+ * **BitcoinDb** store data on the blockchain
+ * **BitcoinToken** issue tokens
 
-The classes can be used independently from one another, but are designed to work well together.
+We will be supporting Bitcoin Cash and Bitcoin SV at launch.

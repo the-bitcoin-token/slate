@@ -1,9 +1,15 @@
 
 # BitcoinToken
 
-<p><code>BitcoinToken</code> objects can issue a token and send them to another user. It can also return the current balance in tokens.</p>
+<code>BitcoinToken</code> can issue, send, and store tokens on the Bitcoin Cash blockchain.
 
-<aside class="warning">You need to run a <a href="https://github.com/the-bitcoin-token/bitcoin-non-standard-server">non-standard server</a> to use BitcoinToken.</aside>
+````javascript
+const { Token } = require('bitcointoken')
+````
+
+It uses <code>BitcoinDb</code> to build and broadcast transactions that encode meta information about token issuances and transfers.
+
+<aside class="notice">You need to run a <a href="https://github.com/the-bitcoin-token/bitcoin-non-standard-server">non-standard server</a> to use BitcoinToken.</aside>
 
 
 ## constructor
@@ -11,8 +17,8 @@
 > Create random BitcoinToken
 
 ````javascript
-const BitcoinToken = Bitcoin.Token
-const randomToken = new BitcoinToken()
+const { Token } = require('bitcointoken')
+const randomToken = new Token()
 ````
 
 A `BitcoinToken` object contains a `BitcoinDb` object to store data on the blockchain. Recall that each `BitcoinDb` object stores a mnemonic that serves as it's identity. To generate a `BitcoinToken` object from a new randomly generated `BitcoinWallet` object call the constructor without a parameter.
@@ -20,8 +26,9 @@ A `BitcoinToken` object contains a `BitcoinDb` object to store data on the block
 > Create BitcoinToken from a BitcoinDb
 
 ````javascript
-const db = new Bitcoin.Db()
-const token = new Bitcoin.Token(db)
+const { Token, Db } = require('bitcointoken')
+const db = new Db()
+const token = new Token(db)
 ````
 
 You can also create a new `BitcoinToken` object from an existing `BitcoinDb` object by passing it into the constructor.
@@ -31,8 +38,8 @@ You can also create a new `BitcoinToken` object from an existing `BitcoinDb` obj
 > Generate a BitcoinToken from a mnemonic
 
 ````javascript
-const mnemonic = BitcoinWallet.getRandomMnemonic()
-const token = BitcoinToken.fromMnemonic(mnemonic)
+const mnemonic = Wallet.getRandomMnemonic()
+const token = Token.fromMnemonic(mnemonic)
 ````
 
 Generates `BitcoinToken` object and initialize the embedded `BitcoinWallet` using the mnemonic.
@@ -50,10 +57,9 @@ Generates `BitcoinToken` object and initialize the embedded `BitcoinWallet` usin
 > Return the wallet
 
 ````javascript
-const token = new BitcoinToken()
 const wallet = token.getWallet()
 
-// wallet.constructor.name === 'BitcoinWallet`
+// wallet.constructor.name === 'Wallet`
 ````
 
 Returns the wallet stored in the db contained in the `BitcoinToken` object.
@@ -68,10 +74,9 @@ Returns the wallet stored in the db contained in the `BitcoinToken` object.
 > Return the db
 
 ````javascript
-const token = new BitcoinToken()
 const db = token.getDb()
 
-// db.constructor.name === 'BitcoinDb`
+// db.constructor.name === 'Db`
 ````
 
 Returns the `BitcoinDb` stored in the `BitcoinToken` object.
@@ -96,14 +101,16 @@ const tokenId = await token.create({
 
 Issues a new fungible token, similar to ERC20 tokens on Ethereum. The parameter must be an object that can be passes into <code>BitcoinDb.put</code>, that is a json object with string keys and string values. It must have one key <code>balance</code> whose value indicates the initial number of tokens.
 
+The create command calls <code>db.put</code> to store the token meta data in the blockchain. The return value is the id of the output that stores the data.
+
 ### Type
 
 <code>async create(data: Object): Promise&lt;OutputId&gt;</code>
 
 
-<aside class="warning"><strong>Known issue</strong> The token implementation is currently 100% trustless but not very efficient. In particular, it does not store intermediary results and re-does many computations. This will be fixed in an upcoming release.<br /><br />
+<aside class="warning"><strong>Known issue</strong> In order for the token implementation to be trustless it must verify the history of every token when <code>send</code> or <code>getBalance</code> are called. The current implementation is trustless, but it does not store intermediary results and is consequently not efficient. This will be addressed in an upcoming release.<br /><br />
 
-If developing with BitcoinToken and the system becomes slow, we recommend to delete both tables in the non-standard server.
+In development we recommend to delete both tables in data base of the non-standard server from time to time.
 </aside>
 
 
@@ -128,10 +135,10 @@ Connects a `BitcoinToken` object a token that has been issued using `token.creat
 > Send a token
 
 ````javascript
-const tokenAlice = new BitcoinToken()
+const tokenAlice = new Token()
 const tokenId = await tokenAlice.create({ balance: '10' })
 
-const tokenBob = new BitcoinToken()
+const tokenBob = new Token()
 tokenBob.join(tokenId)
 
 const publicKeyBob = tokenBob.getWallet().getPublicKey()
@@ -145,6 +152,8 @@ const outputIds = const tokenAlice.send(1, publicKeyBob)
 
 Sends tokens to another user. The first parameter is the number of tokens to send and the second is the public key of the recipient. Sending a token might involve a change output, just like the change output used when sending Bitcoin. The function returns a promise that resolves to an array of OutputIds that containing the newly created outputs that reflect the new state.
 
+<code>token.send</code> calls <code>db.transaction</code> to broadcast a transaction that stores meta data about associated with the token transfer.
+
 ### Type
 
 <code>
@@ -153,7 +162,7 @@ type OutputId = {|<br />
 &nbsp;&nbsp;outputNumber: number<br />
 |}<br />
 <br />
-send(<br />
+async send(<br />
 &nbsp;&nbsp;amount: number,<br />
 &nbsp;&nbsp;publicKey: string<br />
 ): Promise&lt;Array&lt;OutputId&gt;&gt;<br />
@@ -180,8 +189,18 @@ const balance2 = await token.getBalance()
 // balance2 === 9
 ````
 
-Returns the number of tokens owned by the current `BitcoinToken` object.
+Returns the number of tokens owned by the current `BitcoinToken` object. The balance will be computed with respect to the token that was created by the object, or with respect to the token that was joined. <code>token.getBalance()</code> will throw an error if the <code>token</code> object has not created or joined a token.
 
 ### Type
 
-<code>getBalance(): Promise&lt;number&gt;</code>
+<code>async getBalance(): Promise&lt;number&gt;</code>
+
+# BitcoinSource
+
+<code>BitcoinSource</code> is a readable Bitcoin implementation in modern Javascript.
+
+````javascript
+const { Source } = require('bitcointoken')
+````
+
+It is a fork of Bitcore and shares it's [api](https://bitcore.io/api/). You can find the source code [here](https://github.com/the-bitcoin-token/BitcoinSource)

@@ -3,8 +3,7 @@
 `BitcoinWallet` allows you to receive, store, and send Bitcoin Cash.
 
 ```javascript
-const Bitcoin = require('bitcointoken')
-const BitcoinWallet = Bitcoin.Wallet
+const { Wallet } = require('bitcointoken')
 ```
 
 A BitcoinWallet stores a secrete passphrase called menmonic. The mnemonic represents an identity, for example every user in an application would have their own mnemonic. The mnemonic can be used to send Bitcoin to another user, or to generate public addresses that can receive Bitcoin.
@@ -15,11 +14,10 @@ A BitcoinWallet stores a secrete passphrase called menmonic. The mnemonic repres
 > Generate a random BitcoinWallet
 
 ```javascript
-const BitcoinWallet = Bitcoin.Wallet
-const randomWallet = new BitcoinWallet()
+const randomWallet = new Wallet()
 ```
 
-Generates a new `BitcoinWallet` with a random mnemonic call the constructor.
+Generates a new `BitcoinWallet` with a random mnemonic.
 
 
 <!-- A <code>BitcoinWallet</code> object stores a <a href="https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki">BIP32</a> extended private key. This key can be used to generate a private public key pair and a Bitcoin Cash address. Users can send Bitcoin Cash to the address to fund the wallet. The wallet object can compute the balance of the address as well as send bitcoin from it.
@@ -35,7 +33,7 @@ The functions of a <code>BitcoinWallet</code> object are listed below. -->
 > Generate a mnemonic
 
 ```javascript
-const mnemonic = BitcoinWallet.getRandomMnemonic()
+const mnemonic = Wallet.getRandomMnemonic()
 
 // mnemonic === 'rail install size scorpion orchard kingdom vacuum collect pencil element fall enhance media island medal'
 ```
@@ -51,8 +49,8 @@ Generates a new mnemonic from a secure random source.
 > Generate a BitcoinWallet from a mnemonic
 
 ````javascript
-const mnemonic = BitcoinWallet.getRandomMnemonic()
-const wallet = BitcoinWallet.fromMnemonic(mnemonic)
+const mnemonic = Wallet.getRandomMnemonic()
+const wallet = Wallet.fromMnemonic(mnemonic)
 ````
 
 Generates `BitcoinWallet` from a the mnemonic.
@@ -66,7 +64,7 @@ Generates `BitcoinWallet` from a the mnemonic.
 > Return the mnemonic
 
 ````javascript
-const wallet = BitcoinWallet.fromMnemonic('rail install size scorpion orchard kingdom vacuum collect pencil element fall enhance media island medal')
+const wallet = Wallet.fromMnemonic('rail install size scorpion orchard kingdom vacuum collect pencil element fall enhance media island medal')
 const mnemonic = wallet.getMnemonic()
 
 // menominc === 'rail install size scorpion orchard kingdom vacuum collect pencil element fall enhance media island medal'
@@ -129,7 +127,7 @@ getAddress(format?: Format = 'legacy'): string
 > Return the current balance
 
 ````javascript
-const satoshi = wallet.getBalance()
+const satoshi = await wallet.getBalance()
 const bitcoin = satoshi / 1e8
 ````
 
@@ -138,7 +136,7 @@ Returns the current balance in satoshi. Divide by `1e8` to compute the balance i
 
 ### Type
 
-<code>getBalance(): number</code>
+<code>async getBalance(): number</code>
 
 <aside class="notice">Note that `getBalance` returns the balance of the current account and not the balance of derived accounts.</aside>
 
