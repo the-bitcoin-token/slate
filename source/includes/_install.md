@@ -4,31 +4,24 @@ You need <a href="https://docs.npmjs.com/downloading-and-installing-node-js-and-
 
 ## Install
 
-Create a BitcoinToken project. If you only want to use BitcoinWallet you are done. If you want to use BitcoinDb or BitcoinToken you need to install and run a non-standard server.
-
-### Create a BitcoinToken project
-
-> Create a BitcoinToken project
+> Install BitcoinToken
 
 ````terminal
-npm i -y
 npm i bitcointoken
 ````
 
-Create a project by running <code>npm i -y</code> and install BitcoinToken using
+<code>npm i bitcointoken</code>
 
-<code>npm i bitcointoken</code>.
-
+If you only want to use BitcoinWallet you are done. If you want to use BitcoinDb or BitcoinToken you need to install and run a non-standard server in a second terminal window.
 
 ### Install and run the non-standard server
 
 > Install and run the non-standard server
 
-````shell
-# install
+````shell_session
 git clone https://github.com/BitcoinDB/bitcoin-non-standard-server.git
-# run
-cd bitcoin-non-standard-server && docker-compose up
+cd bitcoin-non-standard-server
+docker-compose up
 ````
 
 We recommend to use <a href="https://www.docker.com/">Docker</a> and <a href="https://docs.docker.com/compose/">Docker Compose</a> to build and run the server using the commands on the right. If you do not use docker you can find instructions in the <a href="https://github.com/the-bitcoin-token/bitcoin-non-standard-server">Github repo</a>.
